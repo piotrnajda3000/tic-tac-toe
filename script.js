@@ -9,14 +9,14 @@
       ['x', 'o', 'x'],
     ]
     return {
-      getBoardMarks: () => {
-        const boardMarks = [];
-        for (const row of _board) {  
+      displayBoard: () => {
+        for (const row of _board) {
+          let rowDiv = dom.createRow();    
           for (const mark of row) {
-            boardMarks.push(mark);
+            dom.addMark(rowDiv, mark); 
           }
+          dom.renderRow(rowDiv);
         }
-        return boardMarks
       }
     }
   })(); 
@@ -28,22 +28,31 @@
   const me = player('me'); 
 
   let dom = {
-    renderMark: (mark) => {
-      const square = document.createElement('div')
-      square.classList.add('square')
-      square.textContent = mark; 
-      body.appendChild(square) 
+    createRow: () => {
+      const div = document.createElement('div')
+      return div;
+    },
+    renderRow: (row) => {
+      body.appendChild(row); 
+    },
+    addMark: (row, mark) => {
+      const span = document.createElement('span')
+      span.classList.add('mark')
+      span.textContent = mark; 
+      row.appendChild(span) 
     }, 
   }
-  
-  let displayController = {
-    displayBoard: () => {
-      const boardMarks = gameBoard.getBoardMarks();
-      boardMarks.forEach(mark => dom.renderMark(mark))
-    }
-  }
 
-  displayController.displayBoard(); 
+  gameBoard.displayBoard();
+  
+  // let displayController = {
+  //   displayBoard: () => {
+  //     const boardMarks = gameBoard.getBoardMarks();
+  //     boardMarks.forEach(mark => dom.renderMark(mark))
+  //   }
+  // }
+
+  // displayController.displayBoard(); 
   
 })();
 
