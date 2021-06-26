@@ -1,12 +1,22 @@
 (function init() {
 
+  // Init HTML 
   const body = document.querySelector('body')
-  body.innerHTML = ''; 
+  body.innerHTML = '';
 
   const board = document.createElement('div')
   board.setAttribute('id', 'board');
-  body.appendChild(board); 
+  body.appendChild(board);
 
+  const turn = document.createElement('div')
+  turn.setAttribute('id', 'turn');
+  body.appendChild(turn);
+
+  const button = document.createElement('button');
+  button.setAttribute('id', 'restart');
+  button.textContent = 'Restart'
+  button.addEventListener('click', init);
+  body.appendChild(button);
 
   const gameBoard = (() => {
 
@@ -34,18 +44,6 @@
 
   const game = (() => {
 
-    const announceState = () => {
-      if (winner) {
-        turn.textContent = `${winner} has won!`
-      }
-      else if (draw) {
-        turn.textContent = `It's a tie!`; 
-      }
-      else {
-        turn.textContent = `${currentPlayer.getMark()}'s turn`;
-      }
-    }
-
     const addMark = (e) => {
 
       if (winner) return;
@@ -58,74 +56,79 @@
         const spot = document.querySelector(`div[data-index="${index}"]`);
         _board[index] = mark;
         spot.textContent = mark;
-        checkEnd()
+        state.check.end()
+        state.announce();
         switchPlayer();
       }
     }
 
     const switchPlayer = () => {
       currentPlayer = currentPlayer == playerOne ? playerTwo : playerOne;
-      announceState();
+      state.announce();
     }
 
-    const winningAxes = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8],
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8],
-      [0, 4, 8],
-      [2, 4, 6],
-    ]
-
-    const checkEnd = () => {
-      if (checkWin() == true) return
-      else checkDraw();
-    }
-
-    const checkWin = () => {
-      winningAxes.forEach(axis => {
-        if (_board[axis[0]] == _board[axis[1]] && _board[axis[1]] == _board[axis[2]] && _board[axis[0]] && _board[axis[1]] && _board[axis[2]]) {
-          winner = _board[axis[0]];
-          announceState();
-          return true;
+    const state = {
+      announce: () => {
+        if (winner) {
+          turn.textContent = `${winner} has won!`
         }
-      })
-    }
-
-    const checkDraw = () => {
-      // If there's no win and no spot in the table is empty 
-      for (const spot of _board) {
-        if (!spot) return;
+        else if (draw) {
+          turn.textContent = `It's a tie!`;
+        }
+        else {
+          turn.textContent = `${currentPlayer.getMark()}'s turn`;
+        }
+      },
+      check: {
+        winningAxes: [
+          [0, 1, 2],
+          [3, 4, 5],
+          [6, 7, 8],
+          [0, 3, 6],
+          [1, 4, 7],
+          [2, 5, 8],
+          [0, 4, 8],
+          [2, 4, 6],
+        ],
+        end: () => {
+          if (state.check.win() == true) return
+          else state.check.draw();
+        },
+        win: () => {
+          state.check.winningAxes.forEach(axis => {
+            if (_board[axis[0]] == _board[axis[1]] && _board[axis[1]] == _board[axis[2]] && _board[axis[0]] && _board[axis[1]] && _board[axis[2]]) {
+              winner = _board[axis[0]];
+              state.announce();
+              return true;
+            }
+          })
+        },
+        draw: () => {
+          // If there's no win and no spot in the table is empty 
+          for (const spot of _board) {
+            if (!spot) return;
+          }
+          draw = true;
+          state.announce();
+        }
       }
-      draw = true;
-      announceState();
     }
 
-    // Init
     const _board = gameBoard.get_board();
 
     const playerOne = player('X');
     const playerTwo = player('O')
     let currentPlayer = playerOne;
+
     let winner = '';
     let draw = false;
 
-    const turn = document.createElement('div')
-    turn.setAttribute('id', 'turn');
-    body.appendChild(turn);
-    announceState();
-
-    const button = document.createElement('button');
-    button.setAttribute('id', 'restart');
-    button.textContent = 'Restart'
-    button.addEventListener('click', init);
-    body.appendChild(button);
+    state.announce();
 
     // Bind events 
     const spots = Array.from(document.querySelectorAll('.spot'));
     spots.forEach(spot => spot.addEventListener('click', addMark));
 
   })();
+
 })();
