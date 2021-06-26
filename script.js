@@ -4,6 +4,16 @@
   const body = document.querySelector('body')
   body.innerHTML = '';
 
+  // const selectOpponent = (() => {
+  //   opponents = ['vs Player', 'vs A.I.']
+  //   opponents.forEach(opponent => {
+  //     const select = document.createElement('button')
+  //     select.className = 'select';
+  //     select.textContent = opponent; 
+  //     body.appendChild(select); 
+  //   })
+  // })
+
   const board = document.createElement('div')
   board.setAttribute('id', 'board');
   body.appendChild(board);
