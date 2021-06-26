@@ -1,0 +1,57 @@
+body, button {
+    color: hsl(0, 0%, 15%);
+}
+
+html {
+    height: 100%;
+}
+body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-family: sans-serif;
+}
+
+#board {
+    display: grid;
+    grid-template-columns: repeat(3, 110px); 
+    grid-template-rows: repeat(3, 110px);
+    grid-gap: 4px;
+    place-items: center;
+    margin-bottom: 4px;
+
+}
+
+.spot {
+    width: 100%;
+    height: 100%;
+    background-color: hsl(0, 0%, 90%);
+    border-width: 1px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+}
+
+#turn {
+    background-color: hsl(0, 0%, 90%);
+    border-top: 2px solid hsl(0, 0%, 80%);
+    width: 338px;
+    margin-bottom: 4px;
+    padding-left: 10px;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: hsl(0, 0%, 90%);
+    border: 0;
+    height: 20px;
+    cursor: pointer;
+    width: 338px;
+    display: inline-block;
+    line-height: 18px;
+    padding: 0;
+    text-align: center;
+}
