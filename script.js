@@ -1,50 +1,47 @@
 (function init() {
-
-  // Init HTML 
-  const body = document.querySelector('body')
-  body.innerHTML = '';
+  // Init HTML
+  const body = document.querySelector("body");
+  body.innerHTML = "";
 
   // const selectOpponent = (() => {
   //   opponents = ['vs Player', 'vs A.I.']
   //   opponents.forEach(opponent => {
   //     const select = document.createElement('button')
   //     select.className = 'select';
-  //     select.textContent = opponent; 
-  //     body.appendChild(select); 
+  //     select.textContent = opponent;
+  //     body.appendChild(select);
   //   })
   // })
 
-  const board = document.createElement('div')
-  board.setAttribute('id', 'board');
+  const board = document.createElement("div");
+  board.setAttribute("id", "board");
   body.appendChild(board);
 
-  const turn = document.createElement('div')
-  turn.setAttribute('id', 'turn');
+  const turn = document.createElement("div");
+  turn.setAttribute("id", "turn");
   body.appendChild(turn);
 
-  const button = document.createElement('button');
-  button.setAttribute('id', 'restart');
-  button.textContent = 'Restart'
-  button.addEventListener('click', init);
+  const button = document.createElement("button");
+  button.setAttribute("id", "restart");
+  button.textContent = "Restart";
+  button.addEventListener("click", init);
   body.appendChild(button);
 
   const gameBoard = (() => {
-
-    // Init empty board 
-    const _board = ['', '', '', '', '', '', '', '', '']
+    // Init empty board
+    const _board = ["", "", "", "", "", "", "", "", ""];
 
     // Render empty board on page
-    for (let i = 0; i < _board.length; i++) {
-      const spot = document.createElement('div')
-      spot.className = 'spot'
-      spot.setAttribute('data-index', i)
-      board.appendChild(spot)
+    for (let i = 0; i < 9; i++) {
+      const spot = document.createElement("div");
+      spot.className = "spot";
+      spot.setAttribute("data-index", i);
+      board.appendChild(spot);
     }
 
     return {
-      get_board: () => _board
-    }
-
+      get_board: () => _board,
+    };
   })();
 
   const player = (mark) => {
@@ -53,39 +50,34 @@
   };
 
   const game = (() => {
-
     const addMark = (e) => {
-
       if (winner) return;
 
       const mark = currentPlayer.getMark();
-      const index = e.target.getAttribute('data-index')
+      const index = e.target.getAttribute("data-index");
 
-      if (_board[index] == '') {
-
+      if (_board[index] == "") {
         const spot = document.querySelector(`div[data-index="${index}"]`);
         _board[index] = mark;
         spot.textContent = mark;
-        state.check.end()
+        state.check.end();
         state.announce();
         switchPlayer();
       }
-    }
+    };
 
     const switchPlayer = () => {
       currentPlayer = currentPlayer == playerOne ? playerTwo : playerOne;
       state.announce();
-    }
+    };
 
     const state = {
       announce: () => {
         if (winner) {
-          turn.textContent = `${winner} has won!`
-        }
-        else if (draw) {
+          turn.textContent = `${winner} has won!`;
+        } else if (draw) {
           turn.textContent = `It's a tie!`;
-        }
-        else {
+        } else {
           turn.textContent = `${currentPlayer.getMark()}'s turn`;
         }
       },
@@ -101,44 +93,48 @@
           [2, 4, 6],
         ],
         end: () => {
-          if (state.check.win() == true) return
+          if (state.check.win() == true) return;
           else state.check.draw();
         },
         win: () => {
-          state.check.winningAxes.forEach(axis => {
-            if (_board[axis[0]] == _board[axis[1]] && _board[axis[1]] == _board[axis[2]] && _board[axis[0]] && _board[axis[1]] && _board[axis[2]]) {
+          state.check.winningAxes.forEach((axis) => {
+            if (
+              _board[axis[0]] == _board[axis[1]] &&
+              _board[axis[1]] == _board[axis[2]] &&
+              _board[axis[0]] &&
+              _board[axis[1]] &&
+              _board[axis[2]]
+            ) {
               winner = _board[axis[0]];
               state.announce();
               return true;
             }
-          })
+          });
         },
         draw: () => {
-          // If there's no win and no spot in the table is empty 
+          // If there's no win and no spot in the table is empty
           for (const spot of _board) {
             if (!spot) return;
           }
           draw = true;
           state.announce();
-        }
-      }
-    }
+        },
+      },
+    };
 
     const _board = gameBoard.get_board();
 
-    const playerOne = player('X');
-    const playerTwo = player('O')
+    const playerOne = player("X");
+    const playerTwo = player("O");
     let currentPlayer = playerOne;
 
-    let winner = '';
+    let winner = "";
     let draw = false;
 
     state.announce();
 
-    // Bind events 
-    const spots = Array.from(document.querySelectorAll('.spot'));
-    spots.forEach(spot => spot.addEventListener('click', addMark));
-
+    // Bind events
+    const spots = Array.from(document.querySelectorAll(".spot"));
+    spots.forEach((spot) => spot.addEventListener("click", addMark));
   })();
-
 })();
