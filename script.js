@@ -51,7 +51,7 @@
 
   const game = (() => {
     const addMark = (e) => {
-      if (winner) return;
+      if (winner || draw) return;
 
       const mark = currentPlayer.getMark();
 
@@ -64,6 +64,7 @@
 
         state.check.end();
         state.announce();
+
         switchPlayer();
       }
     };
@@ -96,8 +97,8 @@
       },
       check: {
         end: () => {
-          if (state.check.win() == true) return;
-          else state.check.draw();
+          if (state.check.win()) return;
+          state.check.draw();
         },
         win: () => {
           winningAxes.forEach((axis) => {
@@ -109,9 +110,6 @@
               _board[axis[2]]
             ) {
               winner = _board[axis[0]];
-
-              state.announce();
-              return true;
             }
           });
         },
@@ -121,7 +119,6 @@
             if (!spot) return;
           }
           draw = true;
-          state.announce();
         },
       },
     };
