@@ -1,4 +1,5 @@
 (function init() {
+  // Init HTML
   const body = document.querySelector("body");
   body.innerHTML = "";
 
@@ -31,7 +32,7 @@
     const _board = ["", "", "", "", "", "", "", "", ""];
 
     // Render empty board on page
-    for (let i = 0; i < _board.length; i++) {
+    for (let i = 0; i < 9; i++) {
       const spot = document.createElement("div");
       spot.className = "spot";
       spot.setAttribute("data-index", i);
@@ -50,20 +51,34 @@
 
   const game = (() => {
     const addMark = (e) => {
-      if (winner) return;
+      if (winner || draw) return;
 
       const mark = currentPlayer.getMark();
+
+      const spot = e.target;
       const index = e.target.getAttribute("data-index");
 
-      if (_board[index] == "") {
-        const spot = document.querySelector(`div[data-index="${index}"]`);
+      if (spot.textContent == "") {
         _board[index] = mark;
         spot.textContent = mark;
+
         state.check.end();
         state.announce();
+
         switchPlayer();
       }
     };
+
+    const winningAxes = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
 
     const switchPlayer = () => {
       currentPlayer = currentPlayer == playerOne ? playerTwo : playerOne;
@@ -81,22 +96,12 @@
         }
       },
       check: {
-        winningAxes: [
-          [0, 1, 2],
-          [3, 4, 5],
-          [6, 7, 8],
-          [0, 3, 6],
-          [1, 4, 7],
-          [2, 5, 8],
-          [0, 4, 8],
-          [2, 4, 6],
-        ],
         end: () => {
-          if (state.check.win() == true) return;
-          else state.check.draw();
+          if (state.check.win()) return;
+          state.check.draw();
         },
         win: () => {
-          state.check.winningAxes.forEach((axis) => {
+          winningAxes.forEach((axis) => {
             if (
               _board[axis[0]] == _board[axis[1]] &&
               _board[axis[1]] == _board[axis[2]] &&
@@ -105,8 +110,6 @@
               _board[axis[2]]
             ) {
               winner = _board[axis[0]];
-              state.announce();
-              return true;
             }
           });
         },
@@ -116,7 +119,6 @@
             if (!spot) return;
           }
           draw = true;
-          state.announce();
         },
       },
     };
@@ -133,7 +135,7 @@
     state.announce();
 
     // Bind events
-    const spots = Array.from(document.querySelectorAll(".spot"));
+    const spots = [...document.querySelectorAll(".spot")];
     spots.forEach((spot) => spot.addEventListener("click", addMark));
   })();
 })();
