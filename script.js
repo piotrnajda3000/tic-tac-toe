@@ -54,14 +54,14 @@
       if (winner) return;
 
       const mark = currentPlayer.getMark();
+
+      const spot = e.target;
       const index = e.target.getAttribute("data-index");
 
-      const spot = document.querySelector(`div[data-index="${index}"]`);
-
-      if (_board[index] == "") {
-        const spot = document.querySelector(`div[data-index="${index}"]`);
+      if (spot.textContent == "") {
         _board[index] = mark;
         spot.textContent = mark;
+
         state.check.end();
         state.announce();
         switchPlayer();
