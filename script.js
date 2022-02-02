@@ -56,6 +56,8 @@
       const mark = currentPlayer.getMark();
       const index = e.target.getAttribute("data-index");
 
+      const spot = document.querySelector(`div[data-index="${index}"]`);
+
       if (_board[index] == "") {
         const spot = document.querySelector(`div[data-index="${index}"]`);
         _board[index] = mark;
@@ -65,6 +67,17 @@
         switchPlayer();
       }
     };
+
+    const winningAxes = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6],
+    ];
 
     const switchPlayer = () => {
       currentPlayer = currentPlayer == playerOne ? playerTwo : playerOne;
@@ -82,22 +95,12 @@
         }
       },
       check: {
-        winningAxes: [
-          [0, 1, 2],
-          [3, 4, 5],
-          [6, 7, 8],
-          [0, 3, 6],
-          [1, 4, 7],
-          [2, 5, 8],
-          [0, 4, 8],
-          [2, 4, 6],
-        ],
         end: () => {
           if (state.check.win() == true) return;
           else state.check.draw();
         },
         win: () => {
-          state.check.winningAxes.forEach((axis) => {
+          winningAxes.forEach((axis) => {
             if (
               _board[axis[0]] == _board[axis[1]] &&
               _board[axis[1]] == _board[axis[2]] &&
@@ -106,6 +109,7 @@
               _board[axis[2]]
             ) {
               winner = _board[axis[0]];
+
               state.announce();
               return true;
             }
@@ -134,7 +138,7 @@
     state.announce();
 
     // Bind events
-    const spots = Array.from(document.querySelectorAll(".spot"));
+    const spots = [...document.querySelectorAll(".spot")];
     spots.forEach((spot) => spot.addEventListener("click", addMark));
   })();
 })();
