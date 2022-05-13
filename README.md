@@ -1,15 +1,8 @@
-# Readme
+# Tic-tac-toe
 
-**TODO:**
+Made for [The Odin Project](https://www.theodinproject.com/lessons/node-path-javascript-tic-tac-toe)'s curriculum.
 
-- [Step 7](https://www.theodinproject.com/paths/full-stack-javascript/courses/javascript/lessons/tic-tac-toe)
+[**Live link**](https://piotrnajda3000.github.io/tic-tac-toe)
 
-[Live link](https://piotrnajda3000.github.io/tic-tac-toe)
 
----
 
-What have I learned?
-
-What skills did I demonstrate?
-
-Using the   
